@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Dipendente</title>
+</head>
+
+<body>
+  <h1>Login Dipendente</h1>
+  <input placeholder=" username " type="text" id="usernameInput" /><br>
+  <input placeholder=" password " type="password" id="passwordInput" />
+
+  <button id="loginButton">login</button>
+
+  <br>
+  <p><a href="./index.php">ritorna al listino</a></p>
+</body>
+
+<script>
+document.getElementById('loginButton').addEventListener('click', async () => {
+    const username = document.getElementById('usernameInput').value;
+    const password = document.getElementById('passwordInput').value;
+
+    const response = await fetch('../api/loginDipendente.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+        // Salva in sessionStorage o localStorage
+        localStorage.setItem('dipendente', JSON.stringify(result.dipendente));
+        window.location.href = './admin.php';
+    } else {
+        alert(result.message);
+    }
+});
+</script>
+
+</html>
