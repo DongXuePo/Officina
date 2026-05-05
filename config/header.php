@@ -6,7 +6,9 @@ if (basename($scriptDir) === 'pages') {
 }
 $baseUrl = rtrim($baseUrl, '/\\');
 
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 $isDipendenteLogged = isset($_SESSION['dipendente']);
 ?>
 <header>

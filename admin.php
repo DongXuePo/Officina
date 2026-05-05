@@ -1,10 +1,10 @@
 <?php
-require_once __DIR__ . "/../classes/AuthManager.php";
+require_once __DIR__ . "/classes/AuthManager.php";
 if (!isset($_SESSION)) session_start();
-if (!AuthManager::isAdmin()) {
-    header('Location: ./loginDipendente.html');
-    exit;
-}
+//if (!AuthManager::isAdmin()) {
+  //  header('Location: ./loginDipendente.html');
+    //exit;
+//}
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -12,13 +12,7 @@ if (!AuthManager::isAdmin()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
-    <!-- <script>
-        // Controllo autenticazione
-        const dipendente = JSON.parse(localStorage.getItem('dipendente'));
-        if (!dipendente) {
-            window.location.href = './loginDipendente.html';
-        }
-    </script> -->
+
 </head>
 <body>
     <?php require "config/header.php"; ?>
