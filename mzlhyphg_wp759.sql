@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Apr 15, 2026 alle 09:49
+-- Creato il: Apr 08, 2026 alle 09:55
 -- Versione del server: 10.4.32-MariaDB
 -- Versione PHP: 8.2.12
 
@@ -28,9 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `accessorio` (
-  `id_accessorio` int(11) NOT NULL,
+  `id_accessorio` int(11) NOT NULL AUTO_INCREMENT,
   `descrizione` varchar(100) DEFAULT NULL,
-  `costo_unitario` decimal(10,2) DEFAULT NULL
+  `costo_unitario` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`id_accessorio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -38,6 +39,7 @@ CREATE TABLE `accessorio` (
 --
 
 INSERT INTO `accessorio` (`id_accessorio`, `descrizione`, `costo_unitario`) VALUES
+(0, '22', 2.00),
 (1, 'Chiave inglese', 1.00);
 
 -- --------------------------------------------------------
@@ -61,15 +63,11 @@ CREATE TABLE `autoveicolo` (
 --
 
 CREATE TABLE `cliente` (
-  `id_cliente` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL AUTO_INCREMENT,
   `cognome` varchar(50) DEFAULT NULL,
   `nome` varchar(50) DEFAULT NULL,
   `telefono` varchar(20) DEFAULT NULL,
-  `email` varchar(50) DEFAULT NULL,
-  `codiceOTP` varchar(20) DEFAULT NULL,
-  `dateOTP` date DEFAULT NULL,
-  `status` tinyint(1) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL
+  PRIMARY KEY (`id_cliente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -91,10 +89,12 @@ CREATE TABLE `comprende` (
 --
 
 CREATE TABLE `dipendente` (
-  `id_dipendente` int(11) NOT NULL,
+  `id_dipendente` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
-  `id_officina` int(11) DEFAULT NULL
+  `id_officina` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_dipendente`),
+  KEY `id_officina` (`id_officina`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -111,12 +111,13 @@ INSERT INTO `dipendente` (`id_dipendente`, `username`, `password`, `id_officina`
 --
 
 CREATE TABLE `intervento` (
-  `id_intervento` int(11) NOT NULL,
+  `id_intervento` int(11) NOT NULL AUTO_INCREMENT,
   `data` date DEFAULT NULL,
   `id_officina` int(11) DEFAULT NULL,
   `targa` varchar(10) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
-  `id_tipo` int(11) DEFAULT NULL
+  `id_tipo` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_intervento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -150,9 +151,10 @@ CREATE TABLE `magazzino_pezzi` (
 --
 
 CREATE TABLE `officina` (
-  `id_officina` int(11) NOT NULL,
+  `id_officina` int(11) NOT NULL AUTO_INCREMENT,
   `denominazione` varchar(100) DEFAULT NULL,
-  `indirizzo` varchar(150) DEFAULT NULL
+  `indirizzo` varchar(150) DEFAULT NULL,
+  PRIMARY KEY (`id_officina`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -182,9 +184,10 @@ CREATE TABLE `offre` (
 --
 
 CREATE TABLE `pezzo_ricambio` (
-  `id_pezzo` int(11) NOT NULL,
+  `id_pezzo` int(11) NOT NULL AUTO_INCREMENT,
   `descrizione` varchar(100) DEFAULT NULL,
-  `costo_unitario` decimal(10,2) DEFAULT NULL
+  `costo_unitario` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`id_pezzo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -202,9 +205,10 @@ INSERT INTO `pezzo_ricambio` (`id_pezzo`, `descrizione`, `costo_unitario`) VALUE
 --
 
 CREATE TABLE `servizio` (
-  `id_servizio` int(11) NOT NULL,
+  `id_servizio` int(11) NOT NULL AUTO_INCREMENT,
   `descrizione` varchar(100) DEFAULT NULL,
-  `costo_orario` decimal(10,2) DEFAULT NULL
+  `costo_orario` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`id_servizio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -212,6 +216,7 @@ CREATE TABLE `servizio` (
 --
 
 INSERT INTO `servizio` (`id_servizio`, `descrizione`, `costo_orario`) VALUES
+(0, 'ss', 11.00),
 (1, 'Cambio gomme', 10.00),
 (2, 'Cambio luci', 5.00),
 (3, 'Cambio olio', 67.00),
@@ -224,8 +229,9 @@ INSERT INTO `servizio` (`id_servizio`, `descrizione`, `costo_orario`) VALUES
 --
 
 CREATE TABLE `tipo_intervento` (
-  `id_tipo` int(11) NOT NULL,
-  `descrizione` varchar(100) DEFAULT NULL
+  `id_tipo` int(11) NOT NULL AUTO_INCREMENT,
+  `descrizione` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id_tipo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -257,23 +263,11 @@ CREATE TABLE `utilizza` (
 --
 
 --
--- Indici per le tabelle `accessorio`
---
-ALTER TABLE `accessorio`
-  ADD PRIMARY KEY (`id_accessorio`);
-
---
 -- Indici per le tabelle `autoveicolo`
 --
 ALTER TABLE `autoveicolo`
   ADD PRIMARY KEY (`targa`),
   ADD KEY `id_cliente` (`id_cliente`);
-
---
--- Indici per le tabelle `cliente`
---
-ALTER TABLE `cliente`
-  ADD PRIMARY KEY (`id_cliente`);
 
 --
 -- Indici per le tabelle `comprende`
@@ -283,17 +277,9 @@ ALTER TABLE `comprende`
   ADD KEY `id_servizio` (`id_servizio`);
 
 --
--- Indici per le tabelle `dipendente`
---
-ALTER TABLE `dipendente`
-  ADD PRIMARY KEY (`id_dipendente`),
-  ADD KEY `id_officina` (`id_officina`);
-
---
 -- Indici per le tabelle `intervento`
 --
 ALTER TABLE `intervento`
-  ADD PRIMARY KEY (`id_intervento`),
   ADD KEY `id_officina` (`id_officina`),
   ADD KEY `targa` (`targa`),
   ADD KEY `id_cliente` (`id_cliente`),
@@ -314,12 +300,6 @@ ALTER TABLE `magazzino_pezzi`
   ADD KEY `id_pezzo` (`id_pezzo`);
 
 --
--- Indici per le tabelle `officina`
---
-ALTER TABLE `officina`
-  ADD PRIMARY KEY (`id_officina`);
-
---
 -- Indici per le tabelle `offre`
 --
 ALTER TABLE `offre`
@@ -327,22 +307,10 @@ ALTER TABLE `offre`
   ADD KEY `id_servizio` (`id_servizio`);
 
 --
--- Indici per le tabelle `pezzo_ricambio`
---
-ALTER TABLE `pezzo_ricambio`
-  ADD PRIMARY KEY (`id_pezzo`);
-
---
 -- Indici per le tabelle `servizio`
 --
 ALTER TABLE `servizio`
   ADD PRIMARY KEY (`id_servizio`);
-
---
--- Indici per le tabelle `tipo_intervento`
---
-ALTER TABLE `tipo_intervento`
-  ADD PRIMARY KEY (`id_tipo`);
 
 --
 -- Indici per le tabelle `usa`

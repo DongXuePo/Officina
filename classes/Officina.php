@@ -114,4 +114,56 @@ class Officina
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
+
+    // Metodi per gestire il magazzino pezzi di ricambio
+    public function addQuantitaPezzo($id_officina, $id_pezzo, $quantita)
+    {
+        if ($quantita <= 0) return false;
+        $stmt = $this->conn->prepare("INSERT INTO magazzino_pezzi (id_officina, id_pezzo, quantita) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quantita = quantita + VALUES(quantita)");
+        $stmt->bind_param("iii", $id_officina, $id_pezzo, $quantita);
+        return $stmt->execute();
+    }
+
+    public function removeQuantitaPezzo($id_officina, $id_pezzo, $quantita)
+    {
+        if ($quantita <= 0) return false;
+        // Prima controlla la quantità attuale
+        $stmt = $this->conn->prepare("SELECT quantita FROM magazzino_pezzi WHERE id_officina = ? AND id_pezzo = ?");
+        $stmt->bind_param("ii", $id_officina, $id_pezzo);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows == 0) return false; // Non presente
+        $row = $result->fetch_assoc();
+        if ($row['quantita'] < $quantita) return false; // Non abbastanza
+        // Rimuovi
+        $stmt = $this->conn->prepare("UPDATE magazzino_pezzi SET quantita = quantita - ? WHERE id_officina = ? AND id_pezzo = ?");
+        $stmt->bind_param("iii", $quantita, $id_officina, $id_pezzo);
+        return $stmt->execute();
+    }
+
+    // Metodi per gestire il magazzino accessori
+    public function addQuantitaAccessorio($id_officina, $id_accessorio, $quantita)
+    {
+        if ($quantita <= 0) return false;
+        $stmt = $this->conn->prepare("INSERT INTO magazzino_accessori (id_officina, id_accessorio, quantita) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quantita = quantita + VALUES(quantita)");
+        $stmt->bind_param("iii", $id_officina, $id_accessorio, $quantita);
+        return $stmt->execute();
+    }
+
+    public function removeQuantitaAccessorio($id_officina, $id_accessorio, $quantita)
+    {
+        if ($quantita <= 0) return false;
+        // Prima controlla la quantità attuale
+        $stmt = $this->conn->prepare("SELECT quantita FROM magazzino_accessori WHERE id_officina = ? AND id_accessorio = ?");
+        $stmt->bind_param("ii", $id_officina, $id_accessorio);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows == 0) return false; // Non presente
+        $row = $result->fetch_assoc();
+        if ($row['quantita'] < $quantita) return false; // Non abbastanza
+        // Rimuovi
+        $stmt = $this->conn->prepare("UPDATE magazzino_accessori SET quantita = quantita - ? WHERE id_officina = ? AND id_accessorio = ?");
+        $stmt->bind_param("iii", $quantita, $id_officina, $id_accessorio);
+        return $stmt->execute();
+    }
 }
