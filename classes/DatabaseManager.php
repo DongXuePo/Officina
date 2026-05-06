@@ -12,10 +12,10 @@ class DatabaseManager
         require_once __DIR__ . "/../config/config.php";
 
         $this->conn = new mysqli(
-            Config::$hostname,  
-            Config::$username, 
-            Config::$password, 
-            Config::$dbname,   
+            Config::$hostname,
+            Config::$username,
+            Config::$password,
+            Config::$dbname
         );
 
         if ($this->conn->connect_error) {
