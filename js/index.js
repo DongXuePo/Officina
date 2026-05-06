@@ -5,17 +5,7 @@ function getApiUrl(path) {
 async function loadProducts() {
   try {
     const response = await fetch(getApiUrl("api/getProducts.php"));
-    const text = await response.text();
-
-    let json;
-    try {
-      json = JSON.parse(text);
-    } catch (parseError) {
-      console.error("Invalid JSON response:", text);
-      const container = document.getElementById("container");
-      container.innerHTML = `<p style="color: red;">Errore: risposta API non valida. Controlla il server. ${parseError.message}</p>`;
-      return;
-    }
+    const json = await response.json();
 
     if (json.status) {
       const container = document.getElementById("container");
