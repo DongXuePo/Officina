@@ -36,6 +36,10 @@ try {
     ob_end_clean();
     restore_error_handler();
 
+    // Log dettagliato per debug
+    error_log("Database connection error: " . $e->getMessage());
+    error_log("Config loaded - Host: " . Config::$hostname . ", User: " . Config::$username . ", DB: " . Config::$dbname);
+
     echo error("Errore server: " . $e->getMessage());
 }
 
